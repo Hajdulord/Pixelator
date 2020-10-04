@@ -24,5 +24,20 @@ namespace Pixelator
         {
             InitializeComponent();
         }
+
+        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
