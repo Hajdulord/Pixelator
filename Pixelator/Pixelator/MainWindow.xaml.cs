@@ -21,13 +21,14 @@ namespace Pixelator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private PixelatorModel pixelator = null;
+        private PixelatorModel _pixelator = null;
+        private int _pixelCount = 1;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            pixelator = new PixelatorModel();
+            _pixelator = new PixelatorModel();
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
@@ -39,7 +40,7 @@ namespace Pixelator
 
                 BitmapImage bitmapImage = new BitmapImage(fileUri);
 
-                pixelator.SetOriginImage(bitmapImage);
+                _pixelator.SetOriginImage(bitmapImage);
 
                 OriginalImage.Source = bitmapImage;
             }
@@ -47,16 +48,57 @@ namespace Pixelator
 
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
-            PixelatedImage.Source = pixelator.Pixelate(16);
+            if (OriginalImage.Source != null)
+            {
+                PixelatedImage.Source = _pixelator.Pixelate(_pixelCount);
+            }
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog();
-            if (dialog.ShowDialog() == true)
+            if (OriginalImage.Source != null)
             {
-                pixelator.Export(dialog.FileName);
+                SaveFileDialog dialog = new SaveFileDialog();
+                if (dialog.ShowDialog() == true)
+                {
+                    _pixelator.Export(dialog.FileName);
+                }
             }
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (OriginalImage.Source != null)
+            {
+                OriginalImage.Source = null;
+
+                PixelatedImage.Source = null;
+            }
+        }
+
+        private void OneRButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _pixelCount = 1;
+        }
+
+        private void TwoRButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _pixelCount = 2;
+        }
+
+        private void FourRButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _pixelCount = 4;
+        }
+
+        private void EightRButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _pixelCount = 8;
+        }
+
+        private void SixteenRButton_Checked(object sender, RoutedEventArgs e)
+        {
+            _pixelCount = 16;
         }
     }
 }
