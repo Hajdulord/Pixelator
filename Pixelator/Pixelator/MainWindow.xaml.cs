@@ -34,6 +34,7 @@ namespace Pixelator
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg)|*.png;*.jpeg|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 Uri fileUri = new Uri(openFileDialog.FileName);
@@ -56,24 +57,24 @@ namespace Pixelator
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (OriginalImage.Source != null)
+            if (PixelatedImage.Source != null)
             {
-                SaveFileDialog dialog = new SaveFileDialog();
-                if (dialog.ShowDialog() == true)
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Image files (*.png;*.jpeg)|*.png;*.jpeg|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == true)
                 {
-                    _pixelator.Export(dialog.FileName);
+                    _pixelator.Export(saveFileDialog.FileName);
                 }
             }
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (OriginalImage.Source != null)
-            {
-                OriginalImage.Source = null;
+            OriginalImage.Source = null;
 
-                PixelatedImage.Source = null;
-            }
+            PixelatedImage.Source = null;
+
+            OneRButton.IsChecked = true;
         }
 
         private void OneRButton_Checked(object sender, RoutedEventArgs e)
