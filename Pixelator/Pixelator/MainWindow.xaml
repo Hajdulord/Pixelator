@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixelator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Pixelator" Height="720" Width="1280" MaxWidth="1280" MaxHeight="720" MinWidth="1280" MinHeight="720" Background="#FF323232" BorderThickness="1,1,1,0" ResizeMode="CanMinimize" WindowStyle="ToolWindow" Icon="lesson.png" BorderBrush="#FF505050">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF505050"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF1D5F1D" TargetName="Border" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+        <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         
+        <Label x:Name="OriginalPictureLabel" Content="Original Picture:" HorizontalAlignment="Left" Margin="100,108,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18" Grid.Row="0" Grid.Column="0"/>
+        <Image x:Name="OriginalImage" HorizontalAlignment="Left" Height="240" Margin="100,150,0,0" VerticalAlignment="Top" Width="426" Grid.Row="0" Grid.Column="0"/>
+        <Label x:Name="PixelatedPictureLabel" Content="Pixelated Picture:" HorizontalAlignment="Left" Margin="754,108,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18" Grid.Row="0" Grid.Column="0"/>
+        <Image x:Name="PixelatedImage" HorizontalAlignment="Left" Height="240" Margin="754,150,-286,0" VerticalAlignment="Top" Width="426" Grid.Row="0" Grid.Column="0"/>
+        <Button x:Name="OpenFileButton" Content="Open File" HorizontalAlignment="Left" Margin="140,214,0,-50" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" Grid.Column="0" Click="OpenFileButton_Click"/>
+        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="570,216,0,-50" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" Grid.Column="0" Click="ConvertButton_Click"/>
+        <Button x:Name="ExportButton" Content="Export" HorizontalAlignment="Left" Margin="980,215,-151,-50" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" FontSize="18" Click="ExportButton_Click"/>
+
     </Grid>
 </Window>
