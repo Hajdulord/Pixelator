@@ -47,7 +47,7 @@ namespace Pixelator
 
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
-            PixelatedImage.Source = pixelator.Pixelate(1);
+            PixelatedImage.Source = pixelator.Pixelate(16);
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
