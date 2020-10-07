@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixelator"
         mc:Ignorable="d"
-        Title="Pixelator" Height="720" Width="1280" MaxWidth="1280" MaxHeight="720" MinWidth="1280" MinHeight="720" Background="#FF323232" BorderThickness="1,1,1,0" ResizeMode="CanMinimize" WindowStyle="ToolWindow" Icon="lesson.png" BorderBrush="#FF505050" FontSize="9">
+        Title="Pixelator" Height="720" Width="1280" MinWidth="1280" MinHeight="720" Background="#FF323232" BorderThickness="1,1,1,0" WindowStyle="ToolWindow" Icon="lesson.png" BorderBrush="#FF505050" FontSize="9" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -39,27 +39,38 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
         </Grid.RowDefinitions>
 
-        <Label x:Name="OriginalPictureLabel" Content="Original Picture:" HorizontalAlignment="Left" Margin="70,50,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18" Grid.Row="0" Grid.Column="0"/>
-        <Image x:Name="OriginalImage" HorizontalAlignment="Left" Height="301" Margin="70,89,0,0" VerticalAlignment="Top" Width="555" Grid.Row="0" Grid.Column="0"/>
-        <Label x:Name="PixelatedPictureLabel" Content="Pixelated Picture:" HorizontalAlignment="Left" Margin="655,50,0,0" VerticalAlignment="Top" Foreground="White" FontSize="18" Grid.Row="0" Grid.Column="0"/>
-        <Image x:Name="PixelatedImage" HorizontalAlignment="Left" Height="301" Margin="655,89,-189,0" VerticalAlignment="Top" Width="555" Grid.Row="0" Grid.Column="0"/>
-        <Button x:Name="OpenFileButton" Content="Open File" HorizontalAlignment="Left" Margin="100,50,0,0" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" Grid.Column="0" Click="OpenFileButton_Click"/>
-        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="655,50,0,0" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" Grid.Column="0" Click="ConvertButton_Click"/>
-        <Button x:Name="ExportButton" Content="Export" HorizontalAlignment="Left" Margin="100,200,0,-50" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" FontSize="18" Click="ExportButton_Click"/>
-        <Button x:Name="ResetButton" Content="Reset" HorizontalAlignment="Left" Margin="655,200,0,-50" VerticalAlignment="Top" Width="160" Height="50" Grid.Row="1" FontSize="18" Click="ResetButton_Click"/>
-        <Label x:Name="PixelSizeLabel" Content="Choose Pixel Size" HorizontalAlignment="Left" Margin="1000,10,-89,0" Grid.Row="1" VerticalAlignment="Top" FontSize="18" Foreground="White"/>
-        <RadioButton x:Name="OneRButton" Content="One" HorizontalAlignment="Left" Margin="1000,50,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Foreground="White" Padding="4,0,0,0" Checked="OneRButton_Checked" IsChecked="True"/>
-        <RadioButton x:Name="TwoRButton" Content="Two" HorizontalAlignment="Left" Margin="1000,90,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Foreground="White" Padding="4,0,0,0" Checked="TwoRButton_Checked"/>
-        <RadioButton x:Name="FourRButton" Content="Four" HorizontalAlignment="Left" Margin="1000,130,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Foreground="White" Padding="4,0,0,0" Checked="FourRButton_Checked"/>
-        <RadioButton x:Name="EightRButton" Content="Eight" HorizontalAlignment="Left" Margin="1000,170,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Foreground="White" Padding="4,0,0,0" Checked="EightRButton_Checked"/>
-        <RadioButton x:Name="SixteenRButton" Content="Sixteen" HorizontalAlignment="Left" Margin="1000,210,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Foreground="White" Padding="4,0,0,0" Checked="SixteenRButton_Checked"/>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="OriginalPictureLabel" Content="Original Picture:"  Margin="70,50,10,370"  Foreground="White" FontSize="18" Grid.Column="0"/>
+            <Image x:Name="OriginalImage"  Margin="70,90,10,0"  Grid.Row="0" Grid.Column="0"/>
+            <Label x:Name="PixelatedPictureLabel" Content="Pixelated Picture:"  Margin="10,50,70,370"  Foreground="White" FontSize="18" Grid.Column="1"/>
+            <Image x:Name="PixelatedImage"  Margin="10,90,70,0"  Grid.Row="0" Grid.Column="1"/>
+        </Grid>
+        
+        <Button x:Name="OpenFileButton" Content="Open File"  Margin="100,25,75,25" Grid.Row="1" Grid.Column="0" Click="OpenFileButton_Click"/>
+        <Button x:Name="ConvertButton" Content="Convert"  Margin="100,25,75,25"  Grid.Row="1" Grid.Column="1" Click="ConvertButton_Click"/>
+        <Button x:Name="ExportButton" Content="Export" Margin="100,25,75,25"   Grid.Row="2" Grid.Column="0" FontSize="18" Click="ExportButton_Click"/>
+        <Button x:Name="ResetButton" Content="Reset"  Margin="100,25,75,25"   Grid.Row="2" Grid.Column="1" FontSize="18" Click="ResetButton_Click"/>
+
+        <Label x:Name="PixelSizeLabel" Content="Choose Pixel Size"  Margin="100,10,100,70" Grid.Row="1" Grid.Column="2" FontSize="18" Foreground="White"/>
+        <RadioButton x:Name="OneRButton" Content="One"  Margin="100,50,280,50" Grid.Row="1" Grid.Column="2" Foreground="White" Padding="4,0,0,0" Checked="OneRButton_Checked" IsChecked="True"/>
+        <RadioButton x:Name="TwoRButton" Content="Two"  Margin="100,80,280,20" Grid.Row="1" Grid.Column="2" Foreground="White" Padding="4,0,0,0" Checked="TwoRButton_Checked"/>
+        <RadioButton x:Name="FourRButton" Content="Four"  Margin="100,10,280,90" Grid.Row="2" Grid.Column="2"  Foreground="White" Padding="4,0,0,0" Checked="FourRButton_Checked"/>
+        <RadioButton x:Name="EightRButton" Content="Eight"  Margin="100,40,280,60" Grid.Row="2" Grid.Column="2" Foreground="White" Padding="4,0,0,0" Checked="EightRButton_Checked"/>
+        <RadioButton x:Name="SixteenRButton" Content="Sixteen" Margin="100,70,280,30" Grid.Row="2" Grid.Column="2" Foreground="White" Padding="4,0,0,0" Checked="SixteenRButton_Checked"/>
 
     </Grid>
 </Window>
