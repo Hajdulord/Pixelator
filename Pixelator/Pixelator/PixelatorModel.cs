@@ -12,6 +12,7 @@ namespace Pixelator
     {
         private Bitmap _originImage = null;
         private Bitmap _pixelatedImage = null;
+        private MemoryStream _convertMemoryStream = new MemoryStream();
 
         public void SetOriginImage(BitmapImage bitmapImage)
         {
@@ -176,15 +177,13 @@ namespace Pixelator
             using (Bitmap tempBitmap = new Bitmap(bitmap))
             {
                 //bitmap.Dispose();
-
-                MemoryStream ms = new MemoryStream();
                 
-                tempBitmap?.Save(ms, ImageFormat.Png);
+                tempBitmap?.Save(_convertMemoryStream, ImageFormat.Png);
 
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
-                ms.Seek(0, SeekOrigin.Begin);
-                image.StreamSource = ms;
+                _convertMemoryStream.Seek(0, SeekOrigin.Begin);
+                image.StreamSource = _convertMemoryStream;
                 image.EndInit();
 
                 return image;
