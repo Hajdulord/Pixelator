@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -43,10 +41,10 @@ namespace Pixelator
             {
                 for (int yy = 0; yy < _originImage.Height; yy += pixelSize)
                 {
-                    int r = 0;
-                    int g = 0;
-                    int b = 0;
-                    int a = 0;
+                    var r = 0;
+                    var g = 0;
+                    var b = 0;
+                    var a = 0;
 
                     for (int x = xx; x < xx + pixelSize && x < _originImage.Width; x++)
                     {
@@ -73,6 +71,95 @@ namespace Pixelator
             return ToBitmapImage(_pixelatedImage);
         }
 
+        public BitmapImage Pixelate(int pixelSize, bool isParallel)
+        {
+            if (!isParallel || pixelSize == 1) return Pixelate(pixelSize);
+
+            _pixelatedImage = new Bitmap(_originImage);
+
+            var rect = new Rectangle(0, 0, _pixelatedImage.Width, _pixelatedImage.Height);
+            var data = _pixelatedImage.LockBits(rect, ImageLockMode.ReadWrite, _pixelatedImage.PixelFormat);
+            var depth = Bitmap.GetPixelFormatSize(data.PixelFormat) / 8;
+
+            var buffer = new byte[data.Width * data.Height * depth];
+            var pixelBuffer = new byte[data.Width * data.Height * depth];
+
+
+            Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
+
+
+            Marshal.Copy(data.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+
+            Parallel.Invoke(
+                () => {
+                    //upper-left
+                    Process(buffer, pixelBuffer, 0, 0, data.Width / 2, data.Height / 2, data.Width, depth, pixelSize);
+                },
+                () => {
+                    //upper-right
+                    Process(buffer, pixelBuffer, data.Width / 2, 0, data.Width, data.Height / 2, data.Width, depth, pixelSize);
+                },
+                () => {
+                    //lower-right
+                    Process(buffer, pixelBuffer, data.Width / 2, data.Height / 2, data.Width, data.Height, data.Width, depth, pixelSize);
+                },
+                () => {
+                    //lower-left
+                    Process(buffer, pixelBuffer, 0, data.Height / 2, data.Width / 2, data.Height , data.Width , depth, pixelSize);
+                }
+            );
+            
+            Marshal.Copy(pixelBuffer, 0, data.Scan0, pixelBuffer.Length);
+
+            _pixelatedImage.UnlockBits(data);
+
+            return ToBitmapImage(_pixelatedImage);
+        }
+
+        private void Process(byte[] buffer, byte[] pixelBuffer, int x, int y, int endx, int endy, int width, int depth, int pixelSize)
+        {
+            for (int i = x; i < endx; i += pixelSize)
+            {
+                for (int j = y; j < endy; j += pixelSize)
+                {
+                    var r = 0;
+                    var g = 0;
+                    var b = 0;
+
+                    int divide = 0;
+
+                    for (int xx = i; xx < i + pixelSize && xx < endx; xx++)
+                    {
+                        for (int yy = j; yy < j + pixelSize && yy < endy; yy++)
+                        {
+                            var offset = ((yy * width) + xx) * depth;
+                            r += buffer[offset + 0];
+                            g += buffer[offset + 1];
+                            b += buffer[offset + 2];
+                            ++divide;
+                        }
+                    }
+
+                    r /= divide;
+                    g /= divide;
+                    b /= divide;
+
+
+                    for (int xx = i; xx < i + pixelSize && xx < endx; xx++)
+                    {
+                        for (int yy = j; yy < j + pixelSize && yy < endy; yy++)
+                        {
+                            var offset = ((yy * width) + xx) * depth;
+                            pixelBuffer[offset + 0] = (byte)r;
+                            pixelBuffer[offset + 1] = (byte)g;
+                            pixelBuffer[offset + 2] = (byte)b;
+                        }
+                    }
+
+                }
+            }
+        }
+
         public void SetColorInSection(Bitmap bitmap, int x, int y , int size, Color color)
         {
             for (int i = x; i < x + size && i < bitmap.Width; i++)
@@ -91,6 +178,7 @@ namespace Pixelator
                 //bitmap.Dispose();
 
                 MemoryStream ms = new MemoryStream();
+                
                 tempBitmap?.Save(ms, ImageFormat.Png);
 
                 BitmapImage image = new BitmapImage();
