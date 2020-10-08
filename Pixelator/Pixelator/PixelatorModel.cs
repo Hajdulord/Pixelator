@@ -83,41 +83,36 @@ namespace Pixelator
             var depth = Bitmap.GetPixelFormatSize(data.PixelFormat) / 8;
 
             var buffer = new byte[data.Width * data.Height * depth];
-            var pixelBuffer = new byte[data.Width * data.Height * depth];
-
 
             Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
-
-
-            Marshal.Copy(data.Scan0, pixelBuffer, 0, pixelBuffer.Length);
 
             Parallel.Invoke(
                 () => {
                     //upper-left
-                    Process(buffer, pixelBuffer, 0, 0, data.Width / 2, data.Height / 2, data.Width, depth, pixelSize);
+                    Process(buffer, 0, 0, data.Width / 2, data.Height / 2, data.Width, depth, pixelSize);
                 },
                 () => {
                     //upper-right
-                    Process(buffer, pixelBuffer, data.Width / 2, 0, data.Width, data.Height / 2, data.Width, depth, pixelSize);
+                    Process(buffer, data.Width / 2, 0, data.Width, data.Height / 2, data.Width, depth, pixelSize);
                 },
                 () => {
                     //lower-right
-                    Process(buffer, pixelBuffer, data.Width / 2, data.Height / 2, data.Width, data.Height, data.Width, depth, pixelSize);
+                    Process(buffer, data.Width / 2, data.Height / 2, data.Width, data.Height, data.Width, depth, pixelSize);
                 },
                 () => {
                     //lower-left
-                    Process(buffer, pixelBuffer, 0, data.Height / 2, data.Width / 2, data.Height , data.Width , depth, pixelSize);
+                    Process(buffer, 0, data.Height / 2, data.Width / 2, data.Height , data.Width , depth, pixelSize);
                 }
             );
             
-            Marshal.Copy(pixelBuffer, 0, data.Scan0, pixelBuffer.Length);
+            Marshal.Copy(buffer, 0, data.Scan0, buffer.Length);
 
             _pixelatedImage.UnlockBits(data);
 
             return ToBitmapImage(_pixelatedImage);
         }
 
-        private void Process(byte[] buffer, byte[] pixelBuffer, int x, int y, int endx, int endy, int width, int depth, int pixelSize)
+        private void Process(byte[] buffer, int x, int y, int endx, int endy, int width, int depth, int pixelSize)
         {
             for (int i = x; i < endx; i += pixelSize)
             {
@@ -151,9 +146,9 @@ namespace Pixelator
                         for (int yy = j; yy < j + pixelSize && yy < endy; yy++)
                         {
                             var offset = ((yy * width) + xx) * depth;
-                            pixelBuffer[offset + 0] = (byte)r;
-                            pixelBuffer[offset + 1] = (byte)g;
-                            pixelBuffer[offset + 2] = (byte)b;
+                            buffer[offset + 0] = (byte)r;
+                            buffer[offset + 1] = (byte)g;
+                            buffer[offset + 2] = (byte)b;
                         }
                     }
 
