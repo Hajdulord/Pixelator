@@ -172,7 +172,9 @@ namespace Pixelator
             using (Bitmap tempBitmap = new Bitmap(bitmap))
             {
                 //bitmap.Dispose();
-                
+                _convertMemoryStream.Close();
+
+                _convertMemoryStream = new MemoryStream();
                 tempBitmap?.Save(_convertMemoryStream, ImageFormat.Png);
 
                 BitmapImage image = new BitmapImage();
