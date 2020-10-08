@@ -51,7 +51,7 @@ namespace Pixelator
         {
             if (OriginalImage.Source != null)
             {
-                PixelatedImage.Source = _pixelator.Pixelate(_pixelCount);
+                PixelatedImage.Source = _pixelator.Pixelate(_pixelCount, true);
             }
         }
 
