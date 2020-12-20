@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -87,24 +86,28 @@ namespace Pixelator
             Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
 
             Parallel.Invoke(
-                () => {
+                () =>
+                {
                     //upper-left
                     Process(buffer, 0, 0, data.Width / 2, data.Height / 2, data.Width, depth, pixelSize);
                 },
-                () => {
+                () =>
+                {
                     //upper-right
                     Process(buffer, data.Width / 2, 0, data.Width, data.Height / 2, data.Width, depth, pixelSize);
                 },
-                () => {
+                () =>
+                {
                     //lower-right
                     Process(buffer, data.Width / 2, data.Height / 2, data.Width, data.Height, data.Width, depth, pixelSize);
                 },
-                () => {
+                () =>
+                {
                     //lower-left
-                    Process(buffer, 0, data.Height / 2, data.Width / 2, data.Height , data.Width , depth, pixelSize);
+                    Process(buffer, 0, data.Height / 2, data.Width / 2, data.Height, data.Width, depth, pixelSize);
                 }
             );
-            
+
             Marshal.Copy(buffer, 0, data.Scan0, buffer.Length);
 
             _pixelatedImage.UnlockBits(data);
@@ -156,7 +159,7 @@ namespace Pixelator
             }
         }
 
-        public void SetColorInSection(Bitmap bitmap, int x, int y , int size, Color color)
+        public void SetColorInSection(Bitmap bitmap, int x, int y, int size, Color color)
         {
             for (int i = x; i < x + size && i < bitmap.Width; i++)
             {
